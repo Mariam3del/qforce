@@ -13,6 +13,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import nl.qnh.qforce.domain.Person;
+import nl.qnh.qforce.domain.StarWarsPeopleSearchResults;
 import nl.qnh.qforce.domain.StarWarsPerson;
 
 /**
@@ -41,17 +42,20 @@ public class SWService {
 		} catch (IOException e) {
 			LOGGER.error("Error while trying to call service by id",e);
 		}
+		LOGGER.debug("for id : "+id+" person is returned successfully: "+person);
 		return Optional.of(person);
 	}
 	public  List<StarWarsPerson> getStarWarsPersons(String query) {
-		List<StarWarsPerson> persons = null;
+		StarWarsPeopleSearchResults results = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			persons = mapper.readValue(buildURL(query), new TypeReference<List<StarWarsPerson>>(){});
+			results = mapper.readValue(buildURL(query), StarWarsPeopleSearchResults.class);
 		} catch (IOException e) {
 			LOGGER.error("Error while trying to call service using search function",e);
 		}
-		return persons;
+		LOGGER.debug("for query : "+query+" number of persons returned :"+ Optional.of(results.getResults().size()).orElse(0 ));
+		
+		return results.getResults();
 	}
 	/**
 	 * build URL for retrieving by id function
