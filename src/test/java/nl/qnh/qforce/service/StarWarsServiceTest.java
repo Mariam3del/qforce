@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import nl.qnh.qforce.domain.StarWarsPerson;
 import nl.qnh.qforce.swapi.SWService;
 
-class PersonServiceImplTest {
+class StarWarsServiceTest {
 	StarWarsService personServiceImpl = new StarWarsService();
 
 	@Test

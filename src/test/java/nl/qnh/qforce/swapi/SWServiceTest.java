@@ -15,17 +15,27 @@ import nl.qnh.qforce.domain.StarWarsPerson;
  * @author mino
  *
  */
-class StarWarsPersonServicTest {
+class SWServiceTest {
 	SWService service = new SWService();
 	@Test
 	void testGettingOnePerson() {
 		Optional<StarWarsPerson> person = service.getStarWarsPerson(1);
+		StarWarsPerson starWarsPerson = person.get();
 		assertNotNull(person);
+		assertNotNull(starWarsPerson);
+		assertNotNull(starWarsPerson.getName());
+		assertNotNull(starWarsPerson.getGender());
+		assertNotNull(starWarsPerson.getMass());
 	}
 	@Test
 	void testGettingAnotherPerson() {
 		Optional<StarWarsPerson> person = service.getStarWarsPerson(3);
 		assertNotNull(person);
+		StarWarsPerson starWarsPerson = person.get();
+		assertNotNull(starWarsPerson );
+		assertNotNull(starWarsPerson.getName());
+		assertNotNull(starWarsPerson.getGender());
+		assertNotNull(starWarsPerson.getMass());
 	}
 	@Test
 	void testGettingFemalePerson() {
