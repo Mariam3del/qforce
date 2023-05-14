@@ -1,5 +1,6 @@
 package nl.qnh.qforce.application;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -7,53 +8,58 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import nl.qnh.qforce.domain.Person;
 import nl.qnh.qforce.domain.StarWarsPerson;
 import nl.qnh.qforce.service.PersonService;
-import nl.qnh.qforce.service.PersonServiceImpl;
+import nl.qnh.qforce.service.StarWarsService;
 
 @RestController
 public class StarWarsController {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(StarWarsController.class);
-	private PersonService service = new PersonServiceImpl();
+	// we are using the impl directly because I decided to ignore the 6 year old
+	// interface. ask me why!
+	private StarWarsService service = new StarWarsService();
 
-
-	@GetMapping("/persons/{id}")
-	String getStarWarsPersonById(@PathVariable long id) {
-		Optional<Person> optionalPerson = service.get(id);
-		if (optionalPerson.isEmpty()) {
-			LOGGER.info("No such person is found: id: " + id);
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Person not found : " + id);
-		} else {
-			StarWarsPerson starWarsPerson = (StarWarsPerson) optionalPerson.get();
-			String starWarsPersonJSON = "";
-			try {
-				starWarsPersonJSON = starWarsPerson.toJSON();
-				LOGGER.debug("Generating JSON" + starWarsPersonJSON);
-			} catch (JsonProcessingException e) {
-				LOGGER.error("error writing JSON of" + starWarsPerson, e);
-			}
-			return starWarsPersonJSON;
+	/**
+	 * Method searches for persons using query or else returns 404
+	 * 
+	 * @param query
+	 * @return JSON string
+	 */
+	@GetMapping("/persons/")
+	List<StarWarsPerson> getStarWarsPersons(@RequestParam(name= "q") String query) {
+		LOGGER.debug("Getting all persons with query: " + query);
+		List<StarWarsPerson> searchResults = service.searchStarWarsPersons(query);
+		if (searchResults.isEmpty()) {
+			LOGGER.debug("No results found");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Query didn't return anything");
 		}
+		return searchResults;
 	}
 
-	@GetMapping("/persons")
-	Optional<Person> getStarWarsPersons() {
-		LOGGER.debug("Getting all persons");
-		return Optional.empty();
+	/**
+	 * Method searches for persons using id or else returns 404
+	 */
+	@GetMapping("/persons/{id}")
+	StarWarsPerson getStarWarsPersonById(@PathVariable long id) {
+		Optional<StarWarsPerson> optionalPerson = service.getStarWarsPerson(id);
+		if (optionalPerson.isEmpty()) {
+			LOGGER.debug("No such person is found: id: " + id);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Person not found : " + id);
+		} else {
+			return (StarWarsPerson) optionalPerson.get();
+		}
 	}
 
 	public PersonService getService() {
 		return service;
 	}
 
-	public void setService(PersonService service) {
+	public void setService(StarWarsService service) {
 		this.service = service;
 	}
 }

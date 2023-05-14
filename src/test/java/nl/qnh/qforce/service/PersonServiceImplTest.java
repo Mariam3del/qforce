@@ -1,6 +1,7 @@
 package nl.qnh.qforce.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -10,12 +11,11 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-import nl.qnh.qforce.domain.Person;
 import nl.qnh.qforce.domain.StarWarsPerson;
 import nl.qnh.qforce.swapi.SWService;
 
 class PersonServiceImplTest {
-	PersonServiceImpl personServiceImpl = new PersonServiceImpl();
+	StarWarsService personServiceImpl = new StarWarsService();
 
 	@Test
 	void testSearch() {
@@ -36,7 +36,7 @@ class PersonServiceImplTest {
 		personServiceImpl.setAnalyticsService(analyticsService);
 
 		// finally invoke the service
-		List<Person> searchResults = personServiceImpl.search("search");
+		List<StarWarsPerson> searchResults = personServiceImpl.searchStarWarsPersons("search");
 
 		// check if the results are correct
 		assertNotNull(searchResults);
@@ -61,7 +61,7 @@ class PersonServiceImplTest {
 		personServiceImpl.setAnalyticsService(analyticsService);
 
 		// finally invoke the service
-		List<Person> searchResults = personServiceImpl.search("search");
+		List<StarWarsPerson> searchResults = personServiceImpl.searchStarWarsPersons("search");
 
 		// check if the results are correct
 		assertNotNull(searchResults);
@@ -86,7 +86,7 @@ class PersonServiceImplTest {
 		personServiceImpl.setAnalyticsService(analyticsService);
 
 		// finally invoke the service
-		Optional<Person> searchResults = personServiceImpl.get(2);
+		Optional<StarWarsPerson> searchResults = personServiceImpl.getStarWarsPerson(2);
 
 		// check if the results are correct
 		assertNotNull(searchResults);
@@ -109,7 +109,7 @@ class PersonServiceImplTest {
 		personServiceImpl.setAnalyticsService(analyticsService);
 
 		// finally invoke the service
-		Optional<Person> searchResults = personServiceImpl.get(2);
+		Optional<StarWarsPerson> searchResults = personServiceImpl.getStarWarsPerson(2);
 
 		// check if the results are correct
 		assertNotNull(searchResults);

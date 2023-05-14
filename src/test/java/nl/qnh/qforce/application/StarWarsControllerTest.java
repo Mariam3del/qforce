@@ -1,8 +1,8 @@
 package nl.qnh.qforce.application;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -12,30 +12,30 @@ import org.junit.jupiter.api.Test;
 import org.springframework.web.server.ResponseStatusException;
 
 import nl.qnh.qforce.domain.StarWarsPerson;
-import nl.qnh.qforce.service.PersonServiceImpl;
+import nl.qnh.qforce.service.StarWarsService;
 
 class StarWarsControllerTest {
 
 	@Test
 	void testgetStarWarsPersonById() {
 		StarWarsController starWarsController = new StarWarsController();
-		PersonServiceImpl mock = mock(PersonServiceImpl.class);
+		StarWarsService mock = mock(StarWarsService.class);
 		StarWarsPerson person = new StarWarsPerson();
 		person.setName("Mariam");
 		person.setBirthYear("1982");
-		when(mock.get(1)).thenReturn(Optional.of(person));
+		when(mock.getStarWarsPerson(1)).thenReturn(Optional.of(person));
 		starWarsController.setService(mock);
 		
-		String jsonPerson = starWarsController.getStarWarsPersonById(1);
-		assertNotNull(jsonPerson);
-		assertTrue(jsonPerson.contains("Mariam"));
-		assertTrue(jsonPerson.contains("1982"));
+		StarWarsPerson result = starWarsController.getStarWarsPersonById(1);
+		assertNotNull(result);
+		assertEquals(person.getName(), result.getName());
+		assertEquals(person.getBirthYear(), result.getBirthYear());
 	}
 	@Test
 	void testgetStarWarsPersonByIdNoPersonFound() {
 		StarWarsController starWarsController = new StarWarsController();
-		PersonServiceImpl mock = mock(PersonServiceImpl.class);
-		when(mock.get(1)).thenReturn(Optional.empty());
+		StarWarsService mock = mock(StarWarsService.class);
+		when(mock.getStarWarsPerson(1)).thenReturn(Optional.empty());
 		starWarsController.setService(mock);
 		
 		assertThrows(ResponseStatusException.class, () -> starWarsController.getStarWarsPersonById(1));

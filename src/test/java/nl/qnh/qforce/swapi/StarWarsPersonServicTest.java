@@ -8,29 +8,34 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-import nl.qnh.qforce.domain.Person;
 import nl.qnh.qforce.domain.StarWarsPerson;
 
+/**
+ * Test class that actually calls the backend
+ * @author mino
+ *
+ */
 class StarWarsPersonServicTest {
 	SWService service = new SWService();
 	@Test
 	void testGettingOnePerson() {
-		Optional<Person> person = service.getStarWarsPerson(1);
+		Optional<StarWarsPerson> person = service.getStarWarsPerson(1);
 		assertNotNull(person);
 	}
 	@Test
 	void testGettingAnotherPerson() {
-		Optional<Person> person = service.getStarWarsPerson(3);
+		Optional<StarWarsPerson> person = service.getStarWarsPerson(3);
 		assertNotNull(person);
 	}
 	@Test
 	void testGettingFemalePerson() {
-		Optional<Person> person = service.getStarWarsPerson(5);
+		Optional<StarWarsPerson> person = service.getStarWarsPerson(5);
 		assertNotNull(person);
 	}
+	//test person with gender is none
 	@Test
 	void testGettingGenderNonePerson() {
-		Optional<Person> person = service.getStarWarsPerson(23);
+		Optional<StarWarsPerson> person = service.getStarWarsPerson(23);
 		assertNotNull(person);
 	}
 	@Test

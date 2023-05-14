@@ -12,7 +12,7 @@ public class StarWarsPeopleSearchResults {
 	private int count;
 	private String next;
 	private String previous; 
-	private List<StarWarsPerson> results;
+	private List<StarWarsPerson> results ;
 	public int getCount() {
 		return count;
 	}

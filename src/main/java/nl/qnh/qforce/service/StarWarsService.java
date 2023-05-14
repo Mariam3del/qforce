@@ -3,6 +3,7 @@ package nl.qnh.qforce.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.cfg.NotYetImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,57 +21,69 @@ import nl.qnh.qforce.swapi.SWService;
  * appropriate back end services
  * 
  * The class offers two methods one for searching and one for fetching.
+ * I decided not to use the Personservice provided because of limitations
  * 
  * @author Mariam Adel
  *
  */
-public class PersonServiceImpl implements PersonService {
-	private static Logger LOGGER = LoggerFactory.getLogger(PersonServiceImpl.class);
+public class StarWarsService implements PersonService {
+	private static Logger LOGGER = LoggerFactory.getLogger(StarWarsService.class);
 
 	// we only have one service. if more services exist we should use a factory to
 	// return relevant service
 	private SWService starWarsPersonService = new SWService();
 
-	//this service is used to increment the statistics
+	// this service is used to increment the statistics
 	private AnalyticsService analyticsService = new AnalyticsService();
+
 	/**
 	 * Method to be used when searching for Person object. It returns List of
 	 * Persons that match the criteria
+	 * 
+	 * @deprecated use the other one.
 	 */
 	@Override
 	public List<Person> search(String query) {
+		throw new NotYetImplementedException();
+	}
+
+	/**
+	 * use this method if you want to get a list of starwars persons that fit the
+	 * search query
+	 * 
+	 * @param query
+	 * @return
+	 */
+	public List<StarWarsPerson> searchStarWarsPersons(String query) {
 		LOGGER.info("Searching with query: " + query);
-		//Why am I doing this? is there another way to return List of persons???
-		//TODO: find a cleaner way
-		List<Person> persons = List.copyOf( getStarWarsPersons(query));
-		return persons;
+		// Increment statistics
+		analyticsService.incrementStarWarsStats();
+		// call the appropriate service
+		return starWarsPersonService.getStarWarsPersons(query);
+
 	}
 
 	/**
 	 * Method used to return only one person by ID
+	 * 
+	 * @deprecated DO NOT USE
 	 */
 	@Override
 	public Optional<Person> get(long id) {
 		LOGGER.debug("Searching by id: " + id);
-		return getStarWarsPerson(id);
+		throw new NotYetImplementedException();
 
 	}
 
-	private List<StarWarsPerson> getStarWarsPersons(String query) {
-		//Increment statistics
+	public Optional<StarWarsPerson> getStarWarsPerson(long id) {
+		LOGGER.debug("Searching by id: " + id);
+		// Increment statistics
 		analyticsService.incrementStarWarsStats();
-		//call the appropriate service
-		return  starWarsPersonService.getStarWarsPersons(query);
-	}
-
-	private Optional<Person> getStarWarsPerson(long id) {
-		//Increment statistics
-		analyticsService.incrementStarWarsStats();
-		//call the appropriate service
+		// call the appropriate service
 		return starWarsPersonService.getStarWarsPerson(id);
+
 	}
-	
-	
+
 	public SWService getStarWarsPersonService() {
 		return starWarsPersonService;
 	}
