@@ -9,7 +9,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import nl.qnh.qforce.domain.Person;
@@ -35,15 +34,17 @@ public class SWService {
 	
 
 	public  Optional<Person> getStarWarsPerson(long id) {
+		LOGGER.info("getStarWarsPerson"+ id);
 		StarWarsPerson person = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			person = mapper.readValue(buildURL(id), StarWarsPerson.class);
+			
 		} catch (IOException e) {
 			LOGGER.error("Error while trying to call service by id",e);
 		}
 		LOGGER.debug("for id : "+id+" person is returned successfully: "+person);
-		return Optional.of(person);
+		return Optional.ofNullable(person);
 	}
 	public  List<StarWarsPerson> getStarWarsPersons(String query) {
 		StarWarsPeopleSearchResults results = null;

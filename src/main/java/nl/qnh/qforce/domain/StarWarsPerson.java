@@ -5,24 +5,30 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public class StarWarsPerson implements Person {
 
+	private long id;
 	private String name;
 	private Integer height;
 	private String mass;
 	private String hairColor;
 	private String skinColor;
 	private String eyeColor;
-	@SuppressWarnings("unused")
 	private String birthYear;
 	private StarWarsGender gender;
 	private String homeworld;
 	private List<String> species;
 	private List<String> vehicles;
 	private List<String> starships;
+	
+	public void setId(long id) {
+		this.id = id;
+	}
 
 	public List<String> getSpecies() {
 		return species;
@@ -101,8 +107,7 @@ public class StarWarsPerson implements Person {
 
 	@Override
 	public long getId() {
-		// TODO Auto-generated method stub
-		return 0;
+		return id;
 	}
 
 	@Override
@@ -113,11 +118,12 @@ public class StarWarsPerson implements Person {
 	@Override
 	@JsonProperty("birth_year")
 	public String getBirthYear() {
-		return null;
+		return birthYear;
 	}
 
 	@Override
 	public Gender getGender() {
+		//TODO: User a mapper to map starWarsGender to Gender
 		return null;
 	}
 
@@ -138,6 +144,7 @@ public class StarWarsPerson implements Person {
 	@Override
 	@JsonProperty("film")
 	public List<Movie> getMovies() {
+		//TODO: Map list of movies
 		return null;
 	}
 
@@ -155,5 +162,15 @@ public class StarWarsPerson implements Person {
 				+ ", skinColor=" + skinColor + ", eyeColor=" + eyeColor + ", birthYear=" + birthYear + ", gender="
 				+ gender + ", homeworld=" + homeworld + ", species=" + species + ", vehicles=" + vehicles
 				+ ", starships=" + starships + "]";
+	}
+	
+	/**
+	 * A method that returns a JSON string representation of the Object
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	public String toJSON() throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		return objectMapper.writeValueAsString(this);
 	}
 }

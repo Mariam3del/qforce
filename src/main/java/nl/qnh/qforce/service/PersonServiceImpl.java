@@ -5,8 +5,6 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import nl.qnh.qforce.domain.Person;
 import nl.qnh.qforce.domain.StarWarsPerson;
@@ -40,10 +38,10 @@ public class PersonServiceImpl implements PersonService {
 	 * Persons that match the criteria
 	 */
 	@Override
-	@GetMapping("/persons/q={query}")
 	public List<Person> search(String query) {
 		LOGGER.info("Searching with query: " + query);
 		//Why am I doing this? is there another way to return List of persons???
+		//TODO: find a cleaner way
 		List<Person> persons = List.copyOf( getStarWarsPersons(query));
 		return persons;
 	}
@@ -52,9 +50,8 @@ public class PersonServiceImpl implements PersonService {
 	 * Method used to return only one person by ID
 	 */
 	@Override
-	@GetMapping("/persons/{id}")
-	public Optional<Person> get(@PathVariable long id) {
-		LOGGER.info("Searching by id: " + id);
+	public Optional<Person> get(long id) {
+		LOGGER.debug("Searching by id: " + id);
 		return getStarWarsPerson(id);
 
 	}
