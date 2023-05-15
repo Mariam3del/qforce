@@ -25,8 +25,6 @@ import nl.qnh.qforce.service.StarWarsService;
 @SpringBootTest(classes = StarWarsApplication.class)
 @AutoConfigureMockMvc
 class StarWarsControllerTest {
-	@Autowired
-	private MockMvc mvc;
 	@MockBean
 	private StarWarsController starWarsController;
 
