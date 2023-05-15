@@ -26,7 +26,7 @@ class StarWarsServiceTest {
 
 		// mock starwars service
 		SWService starWarsPersonServiceMock = mock(SWService.class);
-		when(starWarsPersonServiceMock.getStarWarsPersons("search")).thenReturn(persons);
+		when(starWarsPersonServiceMock.getStarWarsPersons("search",1)).thenReturn(persons);
 
 		// set it in the service I want to test
 		personServiceImpl.setStarWarsPersonService(starWarsPersonServiceMock);
@@ -47,7 +47,7 @@ class StarWarsServiceTest {
 
 		// mock star wars service
 		SWService starWarsPersonServiceMock = mock(SWService.class);
-		when(starWarsPersonServiceMock.getStarWarsPersons("search")).thenReturn(persons);
+		when(starWarsPersonServiceMock.getStarWarsPersons("search",1)).thenReturn(persons);
 
 		// set it in the service I want to test
 		personServiceImpl.setStarWarsPersonService(starWarsPersonServiceMock);

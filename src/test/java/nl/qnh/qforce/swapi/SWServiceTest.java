@@ -41,26 +41,53 @@ class SWServiceTest {
 	void testGettingFemalePerson() {
 		Optional<StarWarsPerson> person = service.getStarWarsPerson(5);
 		assertNotNull(person);
+		StarWarsPerson starWarsPerson = person.get();
+		assertNotNull(starWarsPerson.getName());
+		assertNotNull(starWarsPerson.getGender());
+		assertNotNull(starWarsPerson.getMass());
+		assertNotNull(starWarsPerson.getMovies());
+		assertNotNull(starWarsPerson.getGender());
 	}
 	//test person with gender is none
 	@Test
 	void testGettingGenderNonePerson() {
 		Optional<StarWarsPerson> person = service.getStarWarsPerson(23);
 		assertNotNull(person);
+		StarWarsPerson starWarsPerson = person.get();
+		assertNotNull(starWarsPerson.getName());
+		assertNotNull(starWarsPerson.getGender());
+		assertNotNull(starWarsPerson.getMass());
+		assertNotNull(starWarsPerson.getMovies());
+		assertNotNull(starWarsPerson.getGender());
 	}
 	@Test
 	void testGettingSomePersons() {
-		List<StarWarsPerson> starWarsPersons = service.getStarWarsPersons("Luke");
+		List<StarWarsPerson> starWarsPersons = service.getStarWarsPersons("Luke",1);
 		assertNotNull(starWarsPersons);
 		assertNotEquals(0, starWarsPersons.size());
+		for (StarWarsPerson starWarsPerson : starWarsPersons) {
+			assertNotNull(starWarsPerson.getName());
+			assertNotNull(starWarsPerson.getGender());
+			assertNotNull(starWarsPerson.getMass());
+			assertNotNull(starWarsPerson.getMovies());
+			assertNotNull(starWarsPerson.getGender());
+		}
+	
 	}
 	@Test
 	void testGettingMoreThanOnePerson() {
-		List<StarWarsPerson> starWarsPersons = service.getStarWarsPersons("Skywalker");
+		List<StarWarsPerson> starWarsPersons = service.getStarWarsPersons("Skywalker",1);
 		assertNotNull(starWarsPersons);
 		assertNotEquals(0, starWarsPersons.size());
 		//we do know there is more than one skywalker
 		assertNotEquals(1, starWarsPersons);
+		for (StarWarsPerson starWarsPerson : starWarsPersons) {
+			assertNotNull(starWarsPerson.getName());
+			assertNotNull(starWarsPerson.getGender());
+			assertNotNull(starWarsPerson.getMass());
+			assertNotNull(starWarsPerson.getMovies());
+			assertNotNull(starWarsPerson.getGender());
+		}
 	}
 	
 }

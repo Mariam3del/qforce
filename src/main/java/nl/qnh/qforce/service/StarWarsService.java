@@ -42,7 +42,7 @@ public class StarWarsService  {
 	public List<StarWarsPerson> searchStarWarsPersons(String query) {
 		LOGGER.info("Searching with query: " + query);
 		// call the appropriate service
-		return starWarsPersonService.getStarWarsPersons(query);
+		return starWarsPersonService.getStarWarsPersons(query,1);
 
 	}
 

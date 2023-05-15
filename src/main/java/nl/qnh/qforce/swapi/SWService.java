@@ -55,16 +55,25 @@ public class SWService {
 	 * @param query the search query to use for searching
 	 * @return List of starWarsPersons
 	 */
-	public List<StarWarsPerson> getStarWarsPersons(String query) {
+	public List<StarWarsPerson> getStarWarsPersons(String query,int page) {
 		LOGGER.debug("getStarWarsPersons: " + query);
 		StarWarsPeopleSearchResults results = new StarWarsPeopleSearchResults();
 		try {
-			results = mapper.readValue(buildURL(query), StarWarsPeopleSearchResults.class);
+			results = mapper.readValue(buildURL(query,page), StarWarsPeopleSearchResults.class);
 			if (results.getResults() != null) {
 				for (StarWarsPerson starWarsPerson : results.getResults()) {
 					setMovies(starWarsPerson);
 				}
 			}
+			//if results contains more pages. get the next page
+
+			//commenting this out coz it makes the service very slow. consider pagination?
+			
+//			if(results.getNext()!=null && results.getNext()!="") {
+//				List<StarWarsPerson> starWarsPersonsNextPage = getStarWarsPersons(query, page++);
+//				//add the next results to the results
+//				results.getResults().addAll(starWarsPersonsNextPage);
+//			}
 		} catch (IOException e) {
 			LOGGER.error("Error while trying to call service using search function", e);
 		}
@@ -115,8 +124,8 @@ public class SWService {
 	 * @return
 	 * @throws MalformedURLException
 	 */
-	private URL buildURL(String search) throws MalformedURLException {
-		return new URL(SWAPI_PERSON_URL + "?format=json&search=" + search);
+	private URL buildURL(String search, int page) throws MalformedURLException {
+		return new URL(SWAPI_PERSON_URL + "?format=json&search=" + search+"&page="+page);
 	}
 
 	/**
