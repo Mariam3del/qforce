@@ -11,7 +11,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class StarWarsPerson {
 
 	private String name;
-	private Integer height;
+	//these are strings coz it might return the text "uknown"
+	private String height;
 	private String mass;
 	private String birthYear;
 	private StarWarsGender gender;
@@ -38,7 +39,7 @@ public class StarWarsPerson {
 		this.name = name;
 	}
 
-	public void setHeight(Integer height) {
+	public void setHeight(String height) {
 		this.height = height;
 	}
 
@@ -55,7 +56,7 @@ public class StarWarsPerson {
 		return gender;
 	}
 
-	public Integer getHeight() {
+	public String getHeight() {
 		return height;
 	}
 
