@@ -92,6 +92,8 @@ public class SWService {
 			StarWarsMovies movie = mapper.readValue(buildFilmURL(film), StarWarsMovies.class);
 			movies.add(movie);
 		}
+		//clean up films from person. it's not needed anymore
+		person.setFilms(null);
 		person.setMovies(movies);
 	}
 

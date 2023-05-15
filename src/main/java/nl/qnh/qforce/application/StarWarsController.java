@@ -22,8 +22,6 @@ import nl.qnh.qforce.service.StarWarsService;
 public class StarWarsController {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(StarWarsController.class);
-	// we are using the impl directly because I decided to ignore the 6 year old
-	// interface. ask me why!
 	private StarWarsService service = new StarWarsService();
 	private final StatsRepository repository;
 	

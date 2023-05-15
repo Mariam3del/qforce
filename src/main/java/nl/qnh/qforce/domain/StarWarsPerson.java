@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties(ignoreUnknown = true,value={ "films" },allowSetters = true)
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public class StarWarsPerson {
 
@@ -16,6 +16,7 @@ public class StarWarsPerson {
 	private String birthYear;
 	private StarWarsGender gender;
 	private List<StarWarsMovies> movies;
+	
 	private List<String> films;
 
 	@JsonProperty("birth_year")
@@ -62,7 +63,6 @@ public class StarWarsPerson {
 		this.gender = gender;
 	}
 
-	@JsonIgnoreProperties
 	public List<String> getFilms() {
 		return films;
 	}
