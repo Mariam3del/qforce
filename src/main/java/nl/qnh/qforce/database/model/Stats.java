@@ -5,6 +5,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * This is the entity that will be created in the database during startup
+ * @author Mariam Adel
+ *
+ */
 @Entity
 @Table
 public class Stats {
