@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import nl.qnh.qforce.database.model.Stats;
+import nl.qnh.qforce.database.repository.StatsRepository;
+import nl.qnh.qforce.domain.ServiceUsed;
 import nl.qnh.qforce.domain.StarWarsPerson;
-import nl.qnh.qforce.service.PersonService;
 import nl.qnh.qforce.service.StarWarsService;
 
 @RestController
@@ -23,7 +25,11 @@ public class StarWarsController {
 	// we are using the impl directly because I decided to ignore the 6 year old
 	// interface. ask me why!
 	private StarWarsService service = new StarWarsService();
-
+	private final StatsRepository repository;
+	
+	public StarWarsController(StatsRepository repository ) {
+		this.repository=repository;
+	}
 	/**
 	 * Method searches for persons using query or else returns 404
 	 * 
@@ -33,6 +39,7 @@ public class StarWarsController {
 	@GetMapping("/persons/")
 	List<StarWarsPerson> getStarWarsPersons(@RequestParam(name= "q") String query) {
 		LOGGER.debug("Getting all persons with query: " + query);
+		InsertOrUpdateRepository(ServiceUsed.SEARCH);
 		List<StarWarsPerson> searchResults = service.searchStarWarsPersons(query);
 		if (searchResults.isEmpty()) {
 			LOGGER.debug("No results found");
@@ -41,12 +48,14 @@ public class StarWarsController {
 		return searchResults;
 	}
 
+
 	/**
 	 * Method searches for persons using id or else returns 404
 	 */
 	@GetMapping("/persons/{id}")
 	StarWarsPerson getStarWarsPersonById(@PathVariable long id) {
 		Optional<StarWarsPerson> optionalPerson = service.getStarWarsPerson(id);
+		InsertOrUpdateRepository(ServiceUsed.GET);
 		if (optionalPerson.isEmpty()) {
 			LOGGER.debug("No such person is found: id: " + id);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Person not found : " + id);
@@ -54,8 +63,21 @@ public class StarWarsController {
 			return (StarWarsPerson) optionalPerson.get();
 		}
 	}
-
-	public PersonService getService() {
+	private void InsertOrUpdateRepository(ServiceUsed service) {
+		
+		Optional<Stats> statsDBRecord = repository.findById(service.getId());
+		if(statsDBRecord.isEmpty()) {
+			Stats stats = new Stats();
+			stats.setId(service.getId());
+			stats.setVisits(1);
+			repository.save(stats);
+		}else {
+			Stats stats = statsDBRecord.get();
+			stats.setVisits(stats.getVisits()+1);
+			repository.save(stats);
+		}
+	}
+	public StarWarsService getService() {
 		return service;
 	}
 

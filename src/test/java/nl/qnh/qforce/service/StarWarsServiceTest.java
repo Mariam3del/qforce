@@ -28,12 +28,8 @@ class StarWarsServiceTest {
 		SWService starWarsPersonServiceMock = mock(SWService.class);
 		when(starWarsPersonServiceMock.getStarWarsPersons("search")).thenReturn(persons);
 
-		// mock analytics service
-		AnalyticsService analyticsService = mock(AnalyticsService.class);
-
 		// set it in the service I want to test
 		personServiceImpl.setStarWarsPersonService(starWarsPersonServiceMock);
-		personServiceImpl.setAnalyticsService(analyticsService);
 
 		// finally invoke the service
 		List<StarWarsPerson> searchResults = personServiceImpl.searchStarWarsPersons("search");
@@ -53,12 +49,8 @@ class StarWarsServiceTest {
 		SWService starWarsPersonServiceMock = mock(SWService.class);
 		when(starWarsPersonServiceMock.getStarWarsPersons("search")).thenReturn(persons);
 
-		// mock analytics service
-		AnalyticsService analyticsService = mock(AnalyticsService.class);
-
 		// set it in the service I want to test
 		personServiceImpl.setStarWarsPersonService(starWarsPersonServiceMock);
-		personServiceImpl.setAnalyticsService(analyticsService);
 
 		// finally invoke the service
 		List<StarWarsPerson> searchResults = personServiceImpl.searchStarWarsPersons("search");
@@ -78,12 +70,8 @@ class StarWarsServiceTest {
 		SWService starWarsPersonServiceMock = mock(SWService.class);
 		when(starWarsPersonServiceMock.getStarWarsPerson(2)).thenReturn(Optional.of(person));
 
-		// mock analytics service
-		AnalyticsService analyticsService = mock(AnalyticsService.class);
-
 		// set it in the service I want to test
 		personServiceImpl.setStarWarsPersonService(starWarsPersonServiceMock);
-		personServiceImpl.setAnalyticsService(analyticsService);
 
 		// finally invoke the service
 		Optional<StarWarsPerson> searchResults = personServiceImpl.getStarWarsPerson(2);
@@ -101,12 +89,8 @@ class StarWarsServiceTest {
 		SWService starWarsPersonServiceMock = mock(SWService.class);
 		when(starWarsPersonServiceMock.getStarWarsPerson(2)).thenReturn(Optional.empty());
 
-		// mock analytics service
-		AnalyticsService analyticsService = mock(AnalyticsService.class);
-
 		// set it in the service I want to test
 		personServiceImpl.setStarWarsPersonService(starWarsPersonServiceMock);
-		personServiceImpl.setAnalyticsService(analyticsService);
 
 		// finally invoke the service
 		Optional<StarWarsPerson> searchResults = personServiceImpl.getStarWarsPerson(2);

@@ -20,8 +20,8 @@ import nl.qnh.qforce.swapi.SWService;
  * This is our starting point. Here comes the request and here we invoke the
  * appropriate back end services
  * 
- * The class offers two methods one for searching and one for fetching.
- * I decided not to use the Personservice provided because of limitations
+ * The class offers two methods one for searching and one for fetching. I
+ * decided not to use the Personservice provided because of limitations
  * 
  * @author Mariam Adel
  *
@@ -32,9 +32,6 @@ public class StarWarsService implements PersonService {
 	// we only have one service. if more services exist we should use a factory to
 	// return relevant service
 	private SWService starWarsPersonService = new SWService();
-
-	// this service is used to increment the statistics
-	private AnalyticsService analyticsService = new AnalyticsService();
 
 	/**
 	 * Method to be used when searching for Person object. It returns List of
@@ -56,8 +53,6 @@ public class StarWarsService implements PersonService {
 	 */
 	public List<StarWarsPerson> searchStarWarsPersons(String query) {
 		LOGGER.info("Searching with query: " + query);
-		// Increment statistics
-		analyticsService.incrementStarWarsStats();
 		// call the appropriate service
 		return starWarsPersonService.getStarWarsPersons(query);
 
@@ -77,8 +72,6 @@ public class StarWarsService implements PersonService {
 
 	public Optional<StarWarsPerson> getStarWarsPerson(long id) {
 		LOGGER.debug("Searching by id: " + id);
-		// Increment statistics
-		analyticsService.incrementStarWarsStats();
 		// call the appropriate service
 		return starWarsPersonService.getStarWarsPerson(id);
 
@@ -91,13 +84,4 @@ public class StarWarsService implements PersonService {
 	public void setStarWarsPersonService(SWService starWarsPersonService) {
 		this.starWarsPersonService = starWarsPersonService;
 	}
-
-	public AnalyticsService getAnalyticsService() {
-		return analyticsService;
-	}
-
-	public void setAnalyticsService(AnalyticsService analyticsService) {
-		this.analyticsService = analyticsService;
-	}
-
 }
