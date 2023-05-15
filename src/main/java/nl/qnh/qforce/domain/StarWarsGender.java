@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Why did i create a new enum you say??? Coz I am not allowed to edit the
- * orginial code. and it would be quite stupid to build a
- * marshaling/unmarshaling mapper when jackson provide the cabability just use
- * annotations
+ * orginial code. The API would return 5 types not 4 Also by defining a String
+ * with the name , you are letting jackson handle the marshalling and
+ * unmarshaling
  * 
  * @author Mariam Adel
  *
@@ -16,11 +16,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum StarWarsGender {
 	// according to SWAPI docs there is only 4 types but found out by chance that
 	// there is a 5th none value. mistake?
-	MALE("male"), 
-	FEMALE("female"), 
-	UNKNOWN("unknown"), 
-	NOT_APPLICABLE("n/a"), 
-	NONE("none");
+	MALE("male"), FEMALE("female"), UNKNOWN("unknown"), NOT_APPLICABLE("n/a"), NONE("none"),
+	HERMAPHRODITE("hermaphrodite");
 
 	private String gender;
 
