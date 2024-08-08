@@ -27,14 +27,14 @@ import nl.qnh.qforce.domain.StarWarsPerson;
  */
 public class SWService {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(SWService.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(SWService.class);
 
 	// in a perfect world this should be in a properties file
-	private static String SWAPI_PERSON_URL = "https://swapi.dev/api/people/";
-	private ObjectMapper mapper = new ObjectMapper();
+	private final static String SWAPI_PERSON_URL = "https://swapi.dev/api/people/";
+	private final ObjectMapper mapper = new ObjectMapper();
 
 	public Optional<StarWarsPerson> getStarWarsPerson(long id) {
-		LOGGER.info("getStarWarsPerson" + id);
+        LOGGER.info("getStarWarsPerson{}", id);
 		StarWarsPerson person = null;
 		try {
 
@@ -44,16 +44,16 @@ public class SWService {
 		} catch (IOException e) {
 			LOGGER.error("Error while trying to call service by id", e);
 		}
-		LOGGER.debug("for id : " + id + " person is returned successfully: " + person);
+        LOGGER.debug("for id : {} person is returned successfully: {}", id, person);
 		return Optional.ofNullable(person);
 	}
 
 	/**
 	 * This method calls swapi API and returns a results object which will contain a
-	 * list of star wars persons that matches my search
+	 * list of star wars persons that matches my search.
 	 * 
-	 * @param query the search query to use for searching
-	 * @return List of starWarsPersons
+	 * @param query the search query to use for searching.
+	 * @return List of starWarsPersons.
 	 */
 	public List<StarWarsPerson> getStarWarsPersons(String query,int page) {
 		LOGGER.debug("getStarWarsPersons: " + query);
@@ -77,23 +77,14 @@ public class SWService {
 		} catch (IOException e) {
 			LOGGER.error("Error while trying to call service using search function", e);
 		}
-		LOGGER.debug("for query : " + query + " number of persons returned :"
-				+ Optional.of(results.getResults().size()).orElse(0));
+        LOGGER.debug("for query : {} number of persons returned :{}", query, Optional.of(results.getResults().size()).orElse(0));
 
 		return results.getResults();
 	}
 
-	/**
-	 * this method will map every film url return in person to a list of
-	 * starWarMovies
-	 * 
-	 * @param person
-	 * @throws IOException
-	 * @throws MalformedURLException
-	 */
-	private void setMovies(StarWarsPerson person) throws MalformedURLException, IOException {
+	private void setMovies(StarWarsPerson person) throws IOException {
 		LOGGER.debug("populating the movies of person: " + person.getName());
-		List<StarWarsMovies> movies = new ArrayList<StarWarsMovies>();
+		List<StarWarsMovies> movies = new ArrayList<>();
 		// map the list of movies
 		for (String film : person.getFilms()) {
 			// get the film and add to movies
@@ -107,33 +98,33 @@ public class SWService {
 	}
 
 	/**
-	 * build URL for retrieving by id function
+	 * build URL for retrieving by id function.
 	 * 
-	 * @param id
-	 * @return
-	 * @throws MalformedURLException
+	 * @param id is of person.
+	 * @return url of person service.
+	 * @throws MalformedURLException in case of exception.
 	 */
 	private URL buildURL(long id) throws MalformedURLException {
 		return new URL(SWAPI_PERSON_URL + id + "/?format=json");
 	}
 
 	/**
-	 * build URL for retrieving using search function
+	 * build URL for retrieving using search function.
 	 * 
-	 * @param search
-	 * @return
-	 * @throws MalformedURLException
+	 * @param search search page.
+	 * @return URL.
+	 * @throws MalformedURLException in case of exception.
 	 */
 	private URL buildURL(String search, int page) throws MalformedURLException {
 		return new URL(SWAPI_PERSON_URL + "?format=json&search=" + search+"&page="+page);
 	}
 
 	/**
-	 * build URL for retrieving using search function
+	 * build URL for retrieving using search function.
 	 * 
-	 * @param search
-	 * @return
-	 * @throws MalformedURLException
+	 * @param film string to search with.
+	 * @return URL for film.
+	 * @throws MalformedURLException in case of malformed url.
 	 */
 	private URL buildFilmURL(String film) throws MalformedURLException {
 		return new URL(film + "?format=json");

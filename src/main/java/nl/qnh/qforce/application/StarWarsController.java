@@ -21,24 +21,29 @@ import nl.qnh.qforce.service.StarWarsService;
 @RestController
 public class StarWarsController {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(StarWarsController.class);
-	private StarWarsService service = new StarWarsService();
+	private final static Logger LOGGER = LoggerFactory.getLogger(StarWarsController.class);
+
+	private final StarWarsService starWarsService ;
+
 	private final StatsRepository repository;
-	
-	public StarWarsController(StatsRepository repository ) {
-		this.repository=repository;
+
+	public StarWarsController(StarWarsService starWarsService, StatsRepository repository) {
+		this.starWarsService = starWarsService;
+		this.repository = repository;
 	}
+
+
 	/**
-	 * Method searches for persons using query or else returns 404
+	 * Method searches for persons using query or else returns 404.
 	 * 
-	 * @param query
-	 * @return JSON string
+	 * @param query query to search with.
+	 * @return JSON string.
 	 */
 	@GetMapping("/persons/")
 	List<StarWarsPerson> getStarWarsPersons(@RequestParam(name= "q") String query) {
-		LOGGER.debug("Getting all persons with query: " + query);
+        LOGGER.debug("Getting all persons with query: {}", query);
 		InsertOrUpdateRepository(ServiceUsed.SEARCH);
-		List<StarWarsPerson> searchResults = service.searchStarWarsPersons(query);
+		List<StarWarsPerson> searchResults = starWarsService.searchStarWarsPersons(query);
 		if (searchResults.isEmpty()) {
 			LOGGER.debug("No results found");
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Query didn't return anything");
@@ -52,34 +57,27 @@ public class StarWarsController {
 	 */
 	@GetMapping("/persons/{id}")
 	StarWarsPerson getStarWarsPersonById(@PathVariable long id) {
-		Optional<StarWarsPerson> optionalPerson = service.getStarWarsPerson(id);
+		Optional<StarWarsPerson> optionalPerson = starWarsService.getStarWarsPerson(id);
 		InsertOrUpdateRepository(ServiceUsed.GET);
 		if (optionalPerson.isEmpty()) {
-			LOGGER.debug("No such person is found: id: " + id);
+            LOGGER.debug("No such person is found: id: {}", id);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Person not found : " + id);
 		} else {
-			return (StarWarsPerson) optionalPerson.get();
+			return optionalPerson.get();
 		}
 	}
 	private void InsertOrUpdateRepository(ServiceUsed service) {
 		
 		Optional<Stats> statsDBRecord = repository.findById(service.getId());
-		if(statsDBRecord.isEmpty()) {
-			Stats stats = new Stats();
+        Stats stats;
+        if(statsDBRecord.isEmpty()) {
+            stats = new Stats();
 			stats.setId(service.getId());
 			stats.setVisits(1);
-			repository.save(stats);
-		}else {
-			Stats stats = statsDBRecord.get();
+        }else {
+            stats = statsDBRecord.get();
 			stats.setVisits(stats.getVisits()+1);
-			repository.save(stats);
-		}
-	}
-	public StarWarsService getService() {
-		return service;
-	}
-
-	public void setService(StarWarsService service) {
-		this.service = service;
-	}
+        }
+        repository.save(stats);
+    }
 }
