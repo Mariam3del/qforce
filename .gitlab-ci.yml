@@ -1,0 +1,59 @@
+stages:      # List of stages for jobs, and their order of execution
+  - build
+  - test
+  - package
+  - image
+  - deploy
+
+  
+build-job:       # This job runs in the build stage, which runs first.
+  image: maven:3.8.5-openjdk-17
+  stage: build
+  script:
+    - echo "Compiling the code..."
+    - mvn clean install -DskipTests
+    - echo "Compile complete."
+
+unit-test-job:   # This job runs in the test stage.
+  image: maven:3.8.5-openjdk-17
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo "Running unit tests... This will take about 60 seconds."
+    - mvn clean test
+
+package-job:
+  image: maven:3.8.5-openjdk-17
+  stage: package    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo "Packaging qforce."
+    - mvn package
+  artifacts:
+    paths:
+      - target/
+
+build_image:
+  image: docker:24.0.5
+  stage: image
+  services:
+    - docker:dind
+  script:
+    - docker build -t qforce-image .
+    - docker tag qforce-image madelilionx/qforce
+    - docker login --username madelilionx --password rJm3wPEaFRb
+    - docker push madelilionx/qforce
+  dependencies:
+    - package-job
+
+deploy-kube:
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
+  stage: deploy
+  script:
+    - kubectl config get-contexts
+    - kubectl config use-context Mariam.Adel/qforce:qforce-agent
+    - kubectl get pods
+    - kubectl delete pod qforce-container || true
+    - kubectl run qforce-container --image=madelilionx/qforce --port=8080 
+    - kubectl create deployment qforce-server --image=madelilionx/qforce || true
+    - kubectl expose deployment qforce-server --type LoadBalancer --port 8080 --target-port 8080 || true
